@@ -61,7 +61,7 @@ query {
     rating
   }
 }
-
+```
 
 ## About the Service
 
