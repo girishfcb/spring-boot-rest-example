@@ -1,0 +1,15 @@
+type Query {
+    hotelById(id: ID): Hotel
+}
+
+type Hotel {
+    id: ID
+    name: String!
+    description: String
+    city: String
+    rating: String
+}
+
+type Mutation {
+    createHotel(name: String!, description: String, city: String, rating: Int): Hotel!
+}
