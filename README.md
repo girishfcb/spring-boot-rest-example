@@ -24,6 +24,45 @@ Once the application runs you should see something like this
 2017-08-29 17:31:23.097  INFO 19387 --- [           main] com.khoubyari.example.Application        : Started Application in 22.285 seconds (JVM running for 23.032)
 ```
 
+# GraphQL Implementation
+
+For corresponding rest end point GraphQL has been implemented. GraphQL
+provides ``/graphql`` endpoint to run queries and test. GraphQL Playground can be
+used to run as a client.
+
+Run the spring project normally and install GraphQL Playground.
+
+Here are the sample queries to run on /graphql endpoint. So on your local
+machine that would be ``http://localhost:8090/graphql``
+
+These should return corresponding hotel information once run.
+
+
+```
+mutation {
+  createHotel(
+    name: "Minneapolis hotel"
+    description: "Hotel Description"
+    city: "Minneapolis"
+    rating: 5
+  ) {
+    id
+    name
+    city
+    rating
+  }
+}
+
+query {
+  hotelById(id : "1"){
+    id
+    name
+    city
+    rating
+  }
+}
+
+
 ## About the Service
 
 The service is just a simple hotel review REST service. It uses an in-memory database (H2) to store the data. You can also do with a relational database like MySQL or PostgreSQL. If your database connection properties work, you can call some REST endpoints defined in ```com.khoubyari.example.api.rest.hotelController``` on **port 8090**. (see below)
@@ -125,64 +164,4 @@ Spring Boot is an "opinionated" application bootstrapping framework that makes i
 ### To view your H2 in-memory datbase
 
 The 'test' profile runs on H2 in-memory database. To view and query the database you can browse to http://localhost:8090/h2-console. Default username is 'sa' with a blank password. Make sure you disable this in your production profiles. For more, see https://goo.gl/U8m62X
-
-# Running the project with MySQL
-
-This project uses an in-memory database so that you don't have to install a database in order to run it. However, converting it to run with another relational database such as MySQL or PostgreSQL is very easy. Since the project uses Spring Data and the Repository pattern, it's even fairly easy to back the same service with MongoDB. 
-
-Here is what you would do to back the services with MySQL, for example: 
-
-### In pom.xml add: 
-
-```
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-```
-
-### Append this to the end of application.yml: 
-
-```
----
-spring:
-  profiles: mysql
-
-  datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://<your_mysql_host_or_ip>/bootexample
-    username: <your_mysql_username>
-    password: <your_mysql_password>
-
-  jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.MySQLInnoDBDialect
-      ddl-auto: update # todo: in non-dev environments, comment this out:
-
-
-hotel.service:
-  name: 'test profile:'
-```
-
-### Then run is using the 'mysql' profile:
-
-```
-        java -jar -Dspring.profiles.active=mysql target/spring-boot-rest-example-0.5.0.war
-or
-        mvn spring-boot:run -Drun.jvmArguments="-Dspring.profiles.active=mysql"
-```
-
-# Attaching to the app remotely from your IDE
-
-Run the service with these command line options:
-
-```
-mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
-or
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dspring.profiles.active=test -Ddebug -jar target/spring-boot-rest-example-0.5.0.war
-```
-and then you can connect to it remotely using your IDE. For example, from IntelliJ You have to add remote debug configuration: Edit configuration -> Remote.
-
-# Questions and Comments: khoubyari@gmail.com
-
 
